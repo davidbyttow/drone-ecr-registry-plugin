@@ -29,4 +29,5 @@ To connect your agents to it, specify the following:
 ```
 DRONE_REGISTRY_ENDPOINT="http://your-registry-image:3000"
 DRONE_REGISTRY_SECRET="your shared secret"
+DRONE_REGISTRY_VERIFY="false"
 ```

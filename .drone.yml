@@ -1,0 +1,15 @@
+kind: pipeline
+name: drone-ecr-registry-plugin
+
+workspace:
+  base: /go
+
+steps:
+- name: build
+  image: golang:latest
+  commands:
+  - make build
+  when:
+    event:
+    - push
+    - pull_request

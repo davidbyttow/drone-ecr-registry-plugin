@@ -1,4 +1,5 @@
 #!/bin/bash
+set -ex
 
 # This script is used for compilation of a specific variant.
 # Specify GOOS as $1, GOARCH as $2
