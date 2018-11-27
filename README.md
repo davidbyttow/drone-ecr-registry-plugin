@@ -1,6 +1,6 @@
 # drone-ecr-repository-plugin
 
-Drone extension to support ECR repositories when pulling images from agents.
+Drone extension to support ECR repositories when pulling images
 
 ## Building
 To build and push to your repository
