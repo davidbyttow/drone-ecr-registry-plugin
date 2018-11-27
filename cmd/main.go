@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/awslabs/amazon-ecr-credential-helper/ecr-login/api"
-	"github.com/davidbyttow/drone-ecr-repository-plugin/plugin"
+	"github.com/davidbyttow/drone-ecr-registry-plugin/plugin"
 	"github.com/drone/drone-go/plugin/registry"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/sirupsen/logrus"
@@ -41,6 +41,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	logrus.Debugf("Extracted region=%s from registry", reg.Region)
 
 	client := factory.NewClientFromRegion(reg.Region)
 

@@ -8,5 +8,5 @@ ENV GODEBUG netdns=go
 
 COPY --from=alpine /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
-ADD bin/linux-amd64/drone-ecr-repository-plugin /bin/
-ENTRYPOINT ["/bin/drone-ecr-repository-plugin"]
+ADD bin/linux-amd64/drone-ecr-registry-plugin /bin/
+ENTRYPOINT ["/bin/drone-ecr-registry-plugin"]

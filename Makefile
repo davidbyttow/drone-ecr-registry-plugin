@@ -4,11 +4,10 @@ all: build
 
 SOURCEDIR=./
 SOURCES := $(shell find $(SOURCEDIR) -name '*.go')
-BINARY_NAME=docker-ecr-repository-plugin
+BINARY_NAME=docker-ecr-registry-plugin
 LOCAL_BINARY=bin/local/$(BINARY_NAME)
 LINUX_AMD64_BINARY=bin/linux-amd64/$(BINARY_NAME)
 DARWIN_AMD64_BINARY=bin/darwin-amd64/$(BINARY_NAME)
-
 
 .PHONY: build
 build: $(LOCAL_BINARY)
@@ -24,6 +23,10 @@ all-variants: linux-amd64 darwin-amd64 windows-amd64
 linux-amd64: $(LINUX_AMD64_BINARY)
 $(LINUX_AMD64_BINARY): $(SOURCES) GITCOMMIT_SHA
 	./scripts/build_variant.sh linux amd64 $(VERSION) $(shell cat GITCOMMIT_SHA)
+
+.PHONY: linux-amd64-image
+linux-amd64-image: docker/Dockerfile.linux-amd64 linux-amd64
+	./scripts/build_image.sh docker/Dockerfile.linux-amd64 drone-ecr-registry-plugin:$(shell cat GITCOMMIT_SHA)
 
 .PHONY: darwin-amd64
 darwin-amd64: $(DARWIN_AMD64_BINARY)

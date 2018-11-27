@@ -31,6 +31,9 @@ func (p *plugin) List(ctx context.Context, req *registry.Request) ([]*drone.Regi
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get credentials")
 	}
+
+	p.logger.Debugf("Sending credentials: address=%s username=%s password=%s", auth.ProxyEndpoint, auth.Username, auth.Password)
+
 	list = append(list, &drone.Registry{
 		Address:  auth.ProxyEndpoint,
 		Username: auth.Username,
