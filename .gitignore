@@ -1,0 +1,5 @@
+/bin/
+GITCOMMIT_SHA
+*.tar.gz
+*.tar
+.DS_Store

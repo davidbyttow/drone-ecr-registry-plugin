@@ -1,0 +1,3 @@
+#!/bin/bash
+
+GO111MODULE=on
