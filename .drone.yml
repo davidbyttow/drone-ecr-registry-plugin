@@ -8,8 +8,11 @@ workspace:
 steps:
 - name: test
   image: golang:latest
+  environment:
+    GO111MODULE: on
   commands:
-  - GO111MODULE=on go test -v ./..
+    - go get -d -t -v ./...
+    - go test -v ./..
   when:
     event:
     - push
