@@ -9,7 +9,7 @@ steps:
 - name: test
   image: golang:latest
   commands:
-  - GO111MODULE=on go test ./..
+  - GO111MODULE=on go test -v ./..
   when:
     event:
     - push
