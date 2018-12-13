@@ -3,13 +3,30 @@ name: drone-ecr-registry-plugin
 
 workspace:
   base: /go
+  path: src/github.com/davidbyttow/drone-ecr-registry-plugin
 
 steps:
 - name: build
-  image: golang:latest
+  image: golang:1.11
   commands:
   - make build
   when:
     event:
     - push
     - pull_request
+
+- name: publish
+  image: plugins/docker
+  settings:
+    repo: davidbyttow/drone-ecr-registry-plugin
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    dockerfile: docker/Dockerfile
+    tags:
+      - latest
+      - ${DRONE_COMMIT_SHA:0:8}
+  when:
+    event:
+    - push
