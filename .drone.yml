@@ -6,6 +6,15 @@ workspace:
   path: src/github.com/davidbyttow/drone-ecr-registry-plugin
 
 steps:
+- name: test
+  image: golang:1.11
+  commands:
+  - GO111MODULE=on go test ./..
+  when:
+    event:
+    - push
+    - pull_request
+
 - name: build
   image: golang:1.11
   commands:
