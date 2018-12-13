@@ -9,22 +9,21 @@ steps:
 - name: test
   image: golang:latest
   environment:
-
   commands:
     - GO111MODULE=on go test -v ./...
   when:
     event:
-    - push
-    - pull_request
+      - push
+      - pull_request
 
 - name: build
   image: golang:latest
   commands:
-  - make build
+    - make build
   when:
     event:
-    - push
-    - pull_request
+      - push
+      - pull_request
 
 - name: publish
   image: plugins/docker
@@ -40,4 +39,7 @@ steps:
       - ${DRONE_COMMIT_SHA:0:8}
   when:
     event:
-    - push
+      - push
+      - tag
+    branch:
+      - master
