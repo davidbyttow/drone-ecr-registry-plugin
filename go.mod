@@ -33,6 +33,7 @@ require (
 	github.com/pkg/browser v0.0.0-20180916011732-0a3d74bf9ce4 // indirect
 	github.com/pkg/errors v0.8.0
 	github.com/sirupsen/logrus v1.2.0
+	github.com/stretchr/testify v1.2.2
 	github.com/urfave/cli v1.20.0 // indirect
 	golang.org/x/crypto v0.0.0-20181127143415-eb0de9b17e85 // indirect
 	golang.org/x/net v0.0.0-20181114220301-adae6a3d119a // indirect

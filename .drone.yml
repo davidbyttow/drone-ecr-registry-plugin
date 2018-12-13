@@ -7,7 +7,7 @@ workspace:
 
 steps:
 - name: test
-  image: golang:1.11
+  image: golang:latest
   commands:
   - GO111MODULE=on go test ./..
   when:
@@ -16,7 +16,7 @@ steps:
     - pull_request
 
 - name: build
-  image: golang:1.11
+  image: golang:latest
   commands:
   - make build
   when:
