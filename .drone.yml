@@ -9,10 +9,9 @@ steps:
 - name: test
   image: golang:latest
   environment:
-    GO111MODULE: on
+
   commands:
-    - go get -d -t -v ./...
-    - go test -v ./..
+    - GO111MODULE=on go test -v ./...
   when:
     event:
     - push
