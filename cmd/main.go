@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/awslabs/amazon-ecr-credential-helper/ecr-login/api"
 	"github.com/davidbyttow/drone-ecr-registry-plugin/plugin"
@@ -12,10 +13,10 @@ import (
 )
 
 type spec struct {
-	Debug    bool   `envconfig:"PLUGIN_DEBUG"`
-	Address  string `envconfig:"PLUGIN_ADDRESS" default:":3000"`
-	Secret   string `envconfig:"PLUGIN_SECRET"`
-	Registry string `envconfig:"ECR_REGISTRY"`
+	Debug        bool   `envconfig:"PLUGIN_DEBUG"`
+	Address      string `envconfig:"PLUGIN_ADDRESS" default:":3000"`
+	Secret       string `envconfig:"PLUGIN_SECRET"`
+	RegistryList string `envconfig:"ECR_REGISTRY_LIST"`
 }
 
 func main() {
@@ -35,24 +36,34 @@ func main() {
 		spec.Address = ":3000"
 	}
 
-	factory := &api.DefaultClientFactory{}
-
-	reg, err := api.ExtractRegistry(spec.Registry)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	logrus.Debugf("Extracted region=%s from registry", reg.Region)
-
-	client := factory.NewClientFromRegion(reg.Region)
-
 	logger := logrus.StandardLogger()
+
+	var accessors []plugin.RegistryAccessor
+
+	urls := strings.Split(spec.RegistryList, ",")
+	for _, url := range urls {
+		if strings.TrimSpace(url) == "" {
+			continue
+		}
+		reg, err := api.ExtractRegistry(url)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		accessor := plugin.NewRegistryAccessor(reg)
+		logger.Debugf("Getting credentials for %s", urls)
+		if _, err = accessor.GetCredentials(); err != nil {
+			logger.Errorf("unable to get credentials: %v", err)
+			continue
+		}
+
+		accessors = append(accessors, accessor)
+	}
 
 	handler := registry.Handler(
 		spec.Secret,
 		plugin.New(
-			spec.Registry,
-			client,
+			accessors,
 			logger,
 		),
 		logger,
