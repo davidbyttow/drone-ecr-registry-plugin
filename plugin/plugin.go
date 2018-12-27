@@ -90,11 +90,12 @@ func (p *plugin) List(ctx context.Context, req *registry.Request) ([]*drone.Regi
 		fmt.Println(err)
 	}
 	urls := strings.Split(GCR.GCRRegistryList, ",")
+	gcr_key := get_vault_key(GCR.GCRVaultPath)
 	for _, host := range urls {
 		list = append(list, &drone.Registry{
 			Address: host,
 			Username: "_json_key",
-			Password: get_vault_key(GCR.GCRVaultPath),
+			Password: gcr_key,
 		})
 	}
 	return list, nil
