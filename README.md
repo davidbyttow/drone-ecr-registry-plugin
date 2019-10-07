@@ -18,7 +18,7 @@ See Makefile for more build options.
 $ docker run \
   --volume=/var/run/docker.sock:/var/run/docker.sock \
   --env=PLUGIN_SECRET="your shared secret"
-  --env=ECR_REGISTRY=xxxxxxxxxx.dkr.ecr.us-east-1.amazonaws.com
+  --env=ECR_REGISTRY_LIST=xxxxxxxxxx.dkr.ecr.us-east-1.amazonaws.com,xxxxxxxxxx.dkr.ecr.us-west-2.amazonaws.com
 ```
 
 You should make sure that the service is able to access ECR.
