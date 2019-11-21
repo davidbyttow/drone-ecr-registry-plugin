@@ -3,12 +3,15 @@ package plugin
 import (
 	"context"
 	"time"
-
+	"fmt"
+	"strings"
 	"github.com/awslabs/amazon-ecr-credential-helper/ecr-login/api"
 	"github.com/drone/drone-go/drone"
 	"github.com/drone/drone-go/plugin/logger"
 	"github.com/drone/drone-go/plugin/registry"
 	"github.com/pkg/errors"
+	vault "github.com/hashicorp/vault/api"
+	"github.com/kelseyhightower/envconfig"
 )
 
 var factory = &api.DefaultClientFactory{}
@@ -22,6 +25,11 @@ type accessor struct {
 	client   api.Client
 	auth     *api.Auth
 	expiry   time.Time
+}
+
+type gcrlist struct {
+	GCRRegistryList string `envconfig:"GCR_REGISTRY_LIST"`
+	GCRVaultPath string `envconfig:"GCR_VAULT_PATH"`
 }
 
 func NewRegistryAccessor(registry *api.Registry) *accessor {
@@ -44,7 +52,6 @@ func (ra *accessor) GetCredentials() (*api.Auth, error) {
 		// NOTE: These expire in 12 hours, but this is OK.
 		ra.expiry = time.Now().Add(time.Hour)
 	}
-
 	return ra.auth, nil
 }
 
@@ -77,5 +84,30 @@ func (p *plugin) List(ctx context.Context, req *registry.Request) ([]*drone.Regi
 		})
 	}
 
+	GCR := new(gcrlist)
+	err := envconfig.Process("", GCR)
+	if err != nil {
+		fmt.Println(err)
+	}
+	urls := strings.Split(GCR.GCRRegistryList, ",")
+	gcr_key := get_vault_key(GCR.GCRVaultPath)
+	for _, host := range urls {
+		list = append(list, &drone.Registry{
+			Address: host,
+			Username: "_json_key",
+			Password: gcr_key,
+		})
+	}
 	return list, nil
+}
+
+func get_vault_key(path string) string {
+	config := &vault.Config{}
+	config.ReadEnvironment()
+	Client, _ := vault.NewClient(config)
+	l := Client.Logical()
+	secret, _ := l.Read(path)
+	datamap := secret.Data
+	data := datamap["value"].(string)
+	return data
 }

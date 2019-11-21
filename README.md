@@ -23,6 +23,15 @@ $ docker run \
 
 You should make sure that the service is able to access ECR.
 
+## GCR Integration
+The plugin also has the ability to retrieve GCR keys from vault and append them to the response. Just make sure these variables are set:
+```
+GCR_VAULT_PATH=secret/{container_viewer_json_key}
+GCR_REGISTRY_LIST=https://gcr.io,https://us.gcr.io,https://eu.gcr.io,https://asia.gcr.io
+VAULT_TOKEN=VAULT_TOKEN
+VAULT_ADDR=https://VAULT_HOST:8200
+```
+
 ## Using the service
 
 To connect your agents to it, specify the following:
